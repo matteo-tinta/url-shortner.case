@@ -4,40 +4,44 @@ import express from "express";
 import createHealthRestController from "./presentation/rest/health.rest";
 import createShortUrlRestController from "./presentation/rest/short-url.rest";
 import withZodValidation from "./presentation/rest/middlewares/withZodValidation";
+import createWithRedisMiddleware from "./presentation/rest/middlewares/withRedis";
+import createWithMovingWindowRateLimitingMiddleware from './presentation/rest/middlewares/withMovingWindowRateLimiting';
 import { withScopedShortUrlService } from "./presentation/rest/middlewares/withScopedService";
-import { ShortUrlCreatePayloadZodObject } from "./presentation/models/short-url.rest.models";
-import { prisma } from "./composition";
-import { withRedis } from "./presentation/rest/middlewares/withRedis";
-import { withMovingWindowRateLimiting } from './presentation/rest/middlewares/withMovingWindowRateLimiting';
+import { ShortUrlCreatePayloadZodObject, ShortUrlGetParamsZodObject } from "./presentation/models/short-url.rest.models";
+import { client as redisClient, prisma, appConfigs } from "./composition";
+
+//creating express middlewares
+const { withRedis } = createWithRedisMiddleware(redisClient);
+const { withMovingWindowRateLimiting } = createWithMovingWindowRateLimitingMiddleware({ client: redisClient });
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+
 //connect to redis
 app.use(withRedis);
 
 // Limit to 3 requests per minute per IP
 app.use(withMovingWindowRateLimiting({
-    limit: process.env.RATE_LIMIT_MAX_REQUESTS ? parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) : 100,
-    windowMs: process.env.RATE_LIMIT_WINDOW_MS ? parseInt(process.env.RATE_LIMIT_WINDOW_MS) : 60000
+    limit: appConfigs.RATE_LIMIT_MAX_REQUESTS,
+    windowMs: appConfigs.RATE_LIMIT_WINDOW_MS
 }));
 
 
-app.get("/health", (req, res) => {
-    const healthCheckController = createHealthRestController();
-    healthCheckController.healthCheck();
-    res.status(200).json({ status: "ok" });
-});
+app.get("/health", () => createHealthRestController().healthCheck);
+
+app.get("/short-url/:key",
+    withZodValidation(ShortUrlGetParamsZodObject, req => req.params),
+    withScopedShortUrlService(prisma),
+    (req) => createShortUrlRestController(req.container?.shortUrlService!).getShortUrl
+)
 
 app.post("/short-url",
-    withZodValidation(ShortUrlCreatePayloadZodObject),
+    withZodValidation(ShortUrlCreatePayloadZodObject, req => req.body),
     withScopedShortUrlService(prisma),
-    async (req, res) => {
-        const shortUrlController = createShortUrlRestController(req.container?.shortUrlService!);
-        const key = await shortUrlController.createShortUrl(req.body)
-        res.status(201).json({ key });
-    })
+    (req) => createShortUrlRestController(req.container?.shortUrlService!).createShortUrl
+)
 
 export default app;

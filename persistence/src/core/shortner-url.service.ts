@@ -15,7 +15,18 @@ const _factory = (prisma: Prisma.DefaultPrismaClient) => {
         return key;
     }
 
+    const getOriginalUrl = async (key: string): Promise<string | null> => {
+        const record = await prisma.shortnedUrl.findUnique({
+            where: {
+                key: key
+            }
+        });
+
+        return record?.url || null;
+    }
+
     return {
+        getOriginalUrl,
         generateShortUrl
     }
 }

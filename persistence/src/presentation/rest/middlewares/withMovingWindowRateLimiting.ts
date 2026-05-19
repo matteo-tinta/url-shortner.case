@@ -1,44 +1,55 @@
 import { Request, Response, NextFunction } from 'express';
-import { client as redisClient } from '../../../composition';
+import type { RedisClientType } from '../../../composition';
 
 // Moving window rate limiting middleware
-const withMovingWindowRateLimiting = (opts: {
-    limit: number; windowMs: number;
+const _factory = (opts: {
+    client: RedisClientType;
 }) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        const { limit, windowMs } = opts;
+    const { client } = opts;
 
-        const ip = req.ip || 'unknown';
-        const key = `rate_limit:${ip}`;
-        const now = Date.now();
-        const windowStart = now - windowMs;
+    const withMovingWindowRateLimiting = (opts: {
+        limit: number;
+        windowMs: number;
+    }) => {
+        return async (req: Request, res: Response, next: NextFunction) => {
+            const { limit, windowMs } = opts;
 
-        try {
-            // Remove entries older than windowMs
-            await redisClient.zRemRangeByScore(key, '-inf', windowStart);
+            const ip = req.ip || 'unknown';
+            const key = `rate_limit:${ip}`;
+            const now = Date.now();
+            const windowStart = now - windowMs;
 
-            // Count requests within the time window
-            const currentCount = await redisClient.zCard(key);
+            try {
+                // Remove entries older than windowMs
+                await client.zRemRangeByScore(key, '-inf', windowStart);
 
-            if (currentCount >= limit) {
-                return res.status(429).json({ error: "Too Many Requests" });
+                // Count requests within the time window
+                const currentCount = await client.zCard(key);
+
+                if (currentCount >= limit) {
+                    return res.status(429).json({ error: "Too Many Requests" });
+                }
+
+                // Add current request
+                await client.zAdd(key, {
+                    score: now,
+                    value: `${ip}:${now}`
+                });
+
+                // Set expiration
+                await client.expire(key, Math.ceil(windowMs * 3 / 1000));
+
+                next();
+            } catch (err) {
+                console.error("Rate limiting error:", err);
+                return res.status(500).json({ error: "Internal Server Error" });
             }
-
-            // Add current request
-            await redisClient.zAdd(key, {
-                score: now,
-                value: `${ip}:${now}`
-            });
-
-            // Set expiration
-            await redisClient.expire(key, Math.ceil(windowMs * 3 / 1000));
-
-            next();
-        } catch (err) {
-            console.error("Rate limiting error:", err);
-            return res.status(500).json({ error: "Internal Server Error" });
-        }
+        };
     };
-};
 
-export { withMovingWindowRateLimiting };
+    return {
+        withMovingWindowRateLimiting
+    }
+}
+
+export default _factory;

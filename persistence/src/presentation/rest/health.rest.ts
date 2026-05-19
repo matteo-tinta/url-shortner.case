@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
 const _factory = () => {
-    const healthCheck = () => {
-        //do nothing
-    };
+    const healthCheck = (req: Request, res: Response) => {
+        res.status(200).json({ status: "ok" });
+    }
 
     return {
         healthCheck,

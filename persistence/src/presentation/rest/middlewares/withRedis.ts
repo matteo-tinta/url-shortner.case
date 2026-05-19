@@ -1,16 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
-import { client as redisClient } from '../../../composition';
+import type { RedisClientType } from '../../../composition';
 
-const withRedis = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (!redisClient.isOpen) {
-            await redisClient.connect();
+const _factory = (client: RedisClientType) => {
+    const withRedis = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (!client.isOpen) {
+                await client.connect();
+            }
+            next();
+        } catch (err) {
+            console.error("Redis connection error:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
         }
-        next();
-    } catch (err) {
-        console.error("Redis connection error:", err);
-        return res.status(500).json({ error: "Internal Server Error" });
+    };
+
+    return {
+        withRedis
     }
 };
 
-export { withRedis };
+export default _factory;

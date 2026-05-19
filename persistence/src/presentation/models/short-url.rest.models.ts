@@ -5,3 +5,9 @@ export const ShortUrlCreatePayloadZodObject = z.object({
 });
 
 export type ShortUrlCreatePayload = z.infer<typeof ShortUrlCreatePayloadZodObject>;
+
+export const ShortUrlGetParamsZodObject = z.object({
+    key: z.string().min(6).max(6),
+});
+
+export type ShortUrlGetRequestParams = z.infer<typeof ShortUrlGetParamsZodObject>;

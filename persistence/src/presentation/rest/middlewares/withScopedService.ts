@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { DefaultPrismaClient } from "../../../persistence/prisma/generated/internal/prismaNamespace";
 
 import shortUrlServiceServiceFactory from "../../../core/shortner-url.service";
 import { PrismaClient } from "@prisma/client/extension";
