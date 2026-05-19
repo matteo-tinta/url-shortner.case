@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { ShortUrlCreatePayload, ShortUrlGetRequestParams } from '../models/short-url.rest.models';
 import { RequestWithBody, RequestWithParams } from '../models/api.models';
+import { ShortnerUrlService } from '../core/shortner-url.service';
 
 const _factory = (
-    service: ReturnType<typeof import("../../core/shortner-url.service").default>
+    service: ShortnerUrlService
 ) => {
     if (!service) {
         throw new Error("ShortUrlService is required");

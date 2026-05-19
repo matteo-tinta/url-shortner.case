@@ -1,9 +1,8 @@
-import healthRestFactory from "../../../src/presentation/rest/health.rest";
-
+import healthRestFactory from "../../../src/controllers/health.controller";
 
 describe("Health REST Controller", () => {
     const controller = healthRestFactory();
-    
+
     const json = vi.fn();
     const status = vi.fn(() => ({ json }));
     const res = { status } as any;

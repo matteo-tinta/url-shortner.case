@@ -1,11 +1,31 @@
-import { Prisma } from "../persistence/prisma/generated/client";
+import { Prisma, PrismaClient } from "../persistence/prisma/generated/client";
+import { randomBytes } from "crypto";
 
-const _factory = (prisma: Prisma.DefaultPrismaClient) => {
+export type ShortnerUrlServiceFactory = typeof _factory;
+export type ShortnerUrlService = ReturnType<ShortnerUrlServiceFactory>;
+
+const BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+const _factory = (prismaService: PrismaClient) => {
+    const _generateKeyBase62 = (): string => {
+        const buffer = randomBytes(8);
+        let num = BigInt(0);
+        for (let i = 0; i < buffer.length; i++) {
+            num = (num << 8n) | BigInt(buffer[i]);
+        }
+
+        let result = "";
+        while (num > 0n) {
+            result = BASE62_CHARS[Number(num % 62n)] + result;
+            num = num / 62n;
+        }
+        return result || "0";
+    };
+
     const generateShortUrl = async (originalUrl: string): Promise<string> => {
-        //TODO: handle collision (usa SHA256 + base62)
-        const key = Math.random().toString(36).substring(2, 8);
+        const key = _generateKeyBase62();
 
-        await prisma.shortnedUrl.create({
+        await prismaService.shortnedUrl.create({
             data: {
                 key: key,
                 url: originalUrl
@@ -16,13 +36,13 @@ const _factory = (prisma: Prisma.DefaultPrismaClient) => {
     }
 
     const getOriginalUrl = async (key: string): Promise<string | null> => {
-        const record = await prisma.shortnedUrl.findUnique({
+        const record = await prismaService.shortnedUrl.findUnique({
             where: {
                 key: key
             }
         });
 
-        return record?.url || null;
+        return record?.url ?? null;
     }
 
     return {
