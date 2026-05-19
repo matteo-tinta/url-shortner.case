@@ -1,0 +1,16 @@
+datasource db {
+    provider = "postgresql"
+}
+
+generator client {
+    provider = "prisma-client"
+    output   = "./generated"
+}
+
+model ShortnedUrl {
+    id  Int    @id @default(autoincrement())
+    key String @unique
+    url String
+
+    @@index([key], name: "key_index", type: Hash)
+}
