@@ -1,16 +1,48 @@
 # Url Shortner - The Case Study
 
-This test cases is used mainly to adapt, and improve my knowledge of microservices and the managing of multiple ADRs like it was a real case scenario
+![Status:Development](https://img.shields.io/badge/status-development-yellow)
 
-Some take off before going deep in:
-- This repository will use the same database instance, but different tables (no NASA pc unfortunatelly): but in reality every service has it's own database instance.
+Case study exploring microservices patterns:
+- OpenAPI
+- rate limiting (sliding window),
+- idempotency,
+- distributed locking (both optimistic / pessimistic),
+- write-through 
+- caching
+- circuit breakers
 
-## Core feature
-- Url shortner: take in an url, store it inside a database and when prompt a redirect is made
+## Architectural decisions
+- See [ADRs](./docs/adr/README.md) for the full ADRs list
 
-## Core principles (in practice)
-- ADR writing
-- rate limiting
-- idempotency and atomic operations
-- microservices
-- No AI involved (except made for english polishing)
+## What is being done
+### Persistence
+![Status:Development](https://img.shields.io/badge/status-development-yellow)
+
+- [ ] OpenAPI
+- [x] Idempotency results and caching
+- [x] Rate limiting
+- [x] Distributed locking (optimisting and pessimistic)
+- [ ] Rollbacks
+
+### Redirect Service
+![Status:Planned](https://img.shields.io/badge/status-planned-darkgray)
+- [ ] Circuit breaker
+- [ ] Write Through
+- [ ] Rate Limiting
+
+## Future implementations
+> These implementations will be considered when the above will work.
+> This section will grow or shrink, it's not definitive.
+- [ ] [User Authentication (oAuth2) with easy IAM Auth](https://github.com/matteo-tinta/easy.iam.authentication)
+- [ ] [User Role Management for administration interfaces with internalize](https://github.com/matteo-tinta/internalize.headless)
+- [ ] A real user interface (FE)
+
+## How to run locally
+### Persistence
+- navigate inside persistence folder
+- run `npm run start:dependencies` to run docker compose file
+- run `npm run prisma:migrate` to apply migrations inside postgres
+- run `npm run dev` to run the REST (level 2) application
+
+### Redirect Service
+*Not ready yet*
