@@ -1,12 +1,12 @@
+import { expressMockFactory } from "@url-shortner/tests";
 import createWithIdempotentResultMiddleware from "../../../src/middlewares/withIdempotentResult";
-import { _createExpressRequestResponseNext } from "../_utils/mock-factories/express.mock";
 import { _createMockedIdempotentService } from "../_utils/mock-factories/idempotent.service.mock";
 import { _createMockedConcurrentService } from "../_utils/mock-factories/optimistic-concurrent.service.mock";
 
 it("should return cached response for repeated requests with same idempotency key", async () => {
     //Arrange
     const key = "test-key";
-    const { req, res, next } = _createExpressRequestResponseNext({
+    const { req, res, next } = expressMockFactory({
         req: {
             headers: {
                 "idempotency-key": key

@@ -1,10 +1,8 @@
 import { PrismaClient } from "./persistence/prisma/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { createClient } from 'redis';
 import createConfigService from "./core/config.service";
-
-import createRedisService from "./core/redis.service";
 import createIdempotentResultServiceFactory from "./core/idempotent.service";
+import { redisServiceFactory, createRedisClient } from "@url-shortner/services";
 import createOptimisticConcurrentLimitServiceFactory from "./core/optimistic-concurrent.service";
 
 
@@ -19,14 +17,12 @@ const adapter = new PrismaPg({
 export const prisma = new PrismaClient({ adapter });
 
 //Redis Client
-export const redisClient = createClient({
+export const { redisClient } = createRedisClient({
     url: appConfigs.REDIS_URL
 });
-redisClient.on('error', err => console.log('Redis Client Error', err));
 
-export type RedisClient = typeof redisClient;
+export const redisService = redisServiceFactory(redisClient);
 
-export const redisService = createRedisService(redisClient);
 export const idempotentResultServiceFactory = createIdempotentResultServiceFactory(redisService);
 export const optimisticConcurrentLimitServiceFactory = createOptimisticConcurrentLimitServiceFactory(redisService);
 

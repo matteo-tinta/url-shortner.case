@@ -1,20 +1,24 @@
-import { createClient } from 'redis';
 import createConfigService from "./core/config.service";
-
-import createRedisService from "./core/redis.service";
+import { redisServiceFactory, createRedisClient } from "@url-shortner/services";
+import { createFetch, createPersistenceHttpClient, } from "@url-shortner/http";
 
 //Configuration
 export const appConfigs = createConfigService(process.env).getConfig();
 
 //Redis Client
-export const redisClient = createClient({
+export const { redisClient } = createRedisClient({
     url: appConfigs.REDIS_URL
 });
-redisClient.on('error', err => console.log('Redis Client Error', err));
 
-export type RedisClient = typeof redisClient;
+export const redisService = redisServiceFactory(redisClient);
 
-export const redisService = createRedisService(redisClient);
+//Http Clients
+const fetchFn = createFetch({
+    fetch: globalThis.fetch,
+    baseUrl: appConfigs.PERSISTENCE_API_BASE_URL
+});
+
+export const persistenceHttpClient = createPersistenceHttpClient({ fetch: fetchFn });
 
 export async function initializePersistence() {
     await redisClient.connect();

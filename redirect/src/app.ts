@@ -2,37 +2,31 @@ import cors from "cors";
 import express from "express";
 
 import createRedirectController from "./controllers/redirect.controller";
-import createWithMovingWindowRateLimitingMiddleware from './middlewares/withMovingWindowRateLimiting';
-import rateLimitingServiceFactory from "./core/rate-limiting.service";
-import createWithErrorHandling from "./middlewares/withErrorHandling";
-import { redisClient as redisClient, appConfigs } from "./composition";
-import { withRedirectRequestParamsValidation } from "./models/redirect.controller.model";
+import { createWithErrorHandlingMiddleware } from "@url-shortner/http";
+import createWithConcurrentLimitingMiddleware from "./middlewares/withConcurrentLimiting";
+import createMutex from "./core/mutex.service";
+import { persistenceHttpClient } from "./composition";
 
-const redirectController = createRedirectController();
+import { default as withRedirectRequestParamsValidation } from "./middlewares/request-validation/withRedirectRequestParamsValidation";
 
-//creating express middlewares
-const { withMovingWindowRateLimiting } = createWithMovingWindowRateLimitingMiddleware({
-    rateLimitingServiceFactory: rateLimitingServiceFactory(redisClient)
+const { withConcurrentLimiting } = createWithConcurrentLimitingMiddleware({
+    mutex: createMutex({ timeoutMs: 5000, maxConcurrent: 5 })
+})
+
+const redirectController = createRedirectController({
+    httpClient: persistenceHttpClient
 });
 
-const { withErrorHandling } = createWithErrorHandling();
+//creating express middlewares
+const { withErrorHandling } = createWithErrorHandlingMiddleware();
 
 const app = express();
 
-app.use(
-    cors(),
-    express.json(),
-    withMovingWindowRateLimiting({
-        limit: appConfigs.RATE_LIMIT_MAX_REQUESTS,
-        windowMs: appConfigs.RATE_LIMIT_WINDOW_MS
-    }));
+app.use(cors(), express.json());
 
 app.get("/:shortCode",
     withRedirectRequestParamsValidation(),
-    withMovingWindowRateLimiting({
-        limit: appConfigs.RATE_LIMIT_MAX_REQUESTS,
-        windowMs: appConfigs.RATE_LIMIT_WINDOW_MS
-    }),
+    withConcurrentLimiting(),
     redirectController.redirect
 )
 

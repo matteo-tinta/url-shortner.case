@@ -1,0 +1,29 @@
+{
+    "name": "@url-shortner/http",
+    "version": "1.0.0",
+    "description": "Shared http between persistence and redirect modules",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run",
+        "build:watch": "tsc --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "@url-shortner/contracts": "file:../contracts",
+        "@url-shortner/services": "file:../services",
+        "zod": "^4.4.3",
+        "express": "^5.2.1"
+    },
+    "devDependencies": {
+        "@url-shortner/tests": "file:../tests",
+        "typescript": "^6.0.3",
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.9.0",
+        "vitest": "^4.1.6"
+    }
+}

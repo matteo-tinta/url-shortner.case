@@ -1,11 +1,11 @@
 import createWithPessimisticConcurrencyLimitMiddleware from "../../../src/middlewares/withPessimisticConcurrencyLimit";
-import { _createExpressRequestResponseNext } from "../_utils/mock-factories/express.mock";
+import { expressMockFactory } from "@url-shortner/tests";
 import { _createMockedConcurrentService } from "../_utils/mock-factories/optimistic-concurrent.service.mock";
 
 it("should acquire and release lock properly", async () => {
     //Arrange
     const key = "test-key";
-    const { req, res, next } = _createExpressRequestResponseNext({
+    const { req, res, next } = expressMockFactory({
         req: {
             headers: {
                 "idempotency-key": key
@@ -42,7 +42,7 @@ it("should acquire and release lock properly", async () => {
 
 it("should throw error if idempotency key is missing", async () => {
     //Arrange
-    const { req, res, next } = _createExpressRequestResponseNext({});
+    const { req, res, next } = expressMockFactory({});
 
     const { service: concurrentService } = _createMockedConcurrentService();
     const concurrentServiceFactory = vi.fn(() => concurrentService);

@@ -1,5 +1,5 @@
+import { RedisService } from "@url-shortner/services";
 import { IdempotencyResult, IdempotencyResultSchema } from "../models/headers.models";
-import { RedisService } from "./redis.service";
 
 export type IdempotentResultServiceFactory = ReturnType<typeof _factory>;
 export type IdempotentResultService = ReturnType<ReturnType<typeof _factory>>;

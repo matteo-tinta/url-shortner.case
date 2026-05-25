@@ -1,6 +1,6 @@
-import { RedisClient } from "../composition";
 import { Request, Response, NextFunction } from "express";
-import { IdempotencyResult, IdempotentRequest, IdempotentRequestHeadersZodObject } from "../models/headers.models";
+import { IdempotencyResult } from "../models/headers.models";
+import { IdempotentRequest } from "@url-shortner/contracts";
 import { IdempotentResultServiceFactory } from "../core/idempotent.service";
 import { OptimisticConcurrentLockServiceFactory } from "../core/optimistic-concurrent.service";
 

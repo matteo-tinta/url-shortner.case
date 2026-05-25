@@ -1,6 +1,8 @@
 import z from "zod";
+import { configServiceFactory } from "@url-shortner/services";
 
 const configSchema = z.object({
+    PERSISTENCE_API_BASE_URL: z.url(),
     REDIS_URL: z.url(),
     PORT: z.string().regex(/^\d+$/).transform(Number).default(4000),
     RATE_LIMIT_WINDOW_MS: z.string().regex(/^\d+$/).transform(Number).default(60000),
@@ -9,22 +11,15 @@ const configSchema = z.object({
 
 export type Config = z.infer<typeof configSchema>;
 export type ConfigServiceFactory = typeof _factory;
-export type ConfigService = ReturnType<ConfigServiceFactory>;
 
 const _factory = (env: NodeJS.ProcessEnv) => {
-    const getConfig = () => {
-        const parsedConfig = configSchema.safeParse(env);
-
-        if (!parsedConfig.success) {
-            console.error("Invalid configuration:", parsedConfig.error.format());
-            throw new Error("Invalid configuration");
-        }
-
-        return parsedConfig.data as Config;
-    }
+    const _centralizedConfig = configServiceFactory({
+        env,
+        schema: configSchema
+    });
 
     return {
-        getConfig
+        ..._centralizedConfig
     }
 }
 

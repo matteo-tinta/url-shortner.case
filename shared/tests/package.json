@@ -1,0 +1,26 @@
+{
+    "name": "@url-shortner/tests",
+    "version": "1.0.0",
+    "description": "Shared tests between modules",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "build:watch": "tsc --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "@url-shortner/services": "file:../services",
+        "zod": "^4.4.3",
+        "express": "^5.2.1"
+    },
+    "devDependencies": {
+        "typescript": "^6.0.3",
+        "@types/express": "^5.0.6",
+        "@types/node": "^25.9.0",
+        "vitest": "^4.1.6"
+    }
+}

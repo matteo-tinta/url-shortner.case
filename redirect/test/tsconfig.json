@@ -13,6 +13,8 @@
     },
     "include": [
         "**/*.ts",
-        "../src/**/*.ts"
+        "../src/**/*.ts",
+        "../../shared/http/tests/middlewares/withZodValidation.test.ts",
+        "../../shared/http/tests/middlewares/withErrorHandling.test.ts"
     ]
 }

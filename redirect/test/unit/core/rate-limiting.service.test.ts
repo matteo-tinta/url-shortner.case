@@ -1,5 +1,5 @@
+import { RedisService } from "@url-shortner/services";
 import createRateLimitingServiceFactory from "../../../src/core/rate-limiting.service";
-import { RedisService } from "../../../src/core/redis.service";
 
 const _createMocks = () => {
     const mockRedisService: RedisService = {
