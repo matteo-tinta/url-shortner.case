@@ -4,17 +4,17 @@ import { Logger } from "../types/logger";
 type RedisClient = ReturnType<typeof createClient>;
 
 export interface RedisService {
-    get: (key: string) => Promise<string | null>;
-    set: (key: string, value: string, options?: SetOptions) => Promise<string | null>;
-    del: (key: string) => Promise<number>;
-    INCR: (key: string) => Promise<number>;
-    DECR: (key: string) => Promise<number>;
-    expire: (key: string, seconds: number) => Promise<number>;
-    zAdd: (key: string, member: { score: number; value: string }) => Promise<number>;
-    zCard: (key: string) => Promise<number>;
-    zRemRangeByScore: (key: string, min: number | string, max: number | string) => Promise<number>;
-    zRangeWithScores: (key: string, start: number, stop: number) => Promise<{ value: string; score: number }[]>;
-    watch: (key: string) => Promise<string>;
+    get: (_key: string) => Promise<string | null>;
+    set: (_key: string, _value: string, _options?: SetOptions) => Promise<string | null>;
+    del: (_key: string) => Promise<number>;
+    INCR: (_key: string) => Promise<number>;
+    DECR: (_key: string) => Promise<number>;
+    expire: (_key: string, _seconds: number) => Promise<number>;
+    zAdd: (_key: string, _member: { score: number; value: string }) => Promise<number>;
+    zCard: (_key: string) => Promise<number>;
+    zRemRangeByScore: (_key: string, _min: number | string, _max: number | string) => Promise<number>;
+    zRangeWithScores: (_key: string, _start: number, _stop: number) => Promise<{ value: string; score: number }[]>;
+    watch: (_key: string) => Promise<string>;
     unwatch: () => Promise<string>;
     multi: () => ReturnType<RedisClient["multi"]>;
 }

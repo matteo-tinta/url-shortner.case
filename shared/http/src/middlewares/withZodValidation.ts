@@ -1,11 +1,11 @@
-import { ZodError, ZodObject } from "zod";
+import { ZodObject } from "zod";
 import { Request, Response, NextFunction } from "express";
 import { Logger } from "@url-shortner/observability";
 
 const withZodValidation = (options: {
     schema: ZodObject,
     logger: Logger,
-    selector: (req: Request) => any
+    selector: (_req: Request) => any
 }) => {
 
     const validate = (req: Request, res: Response, next: NextFunction) => {

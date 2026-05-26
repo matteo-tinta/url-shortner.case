@@ -1,4 +1,4 @@
-import { trace, SpanStatusCode, Span, Attributes, context, propagation } from "@opentelemetry/api"
+import { trace, SpanStatusCode, Span, Attributes } from "@opentelemetry/api"
 
 const _factory = (opts: {
     tracer: ReturnType<typeof trace.getTracer>;
@@ -8,7 +8,7 @@ const _factory = (opts: {
     const withSpan = async function <T>(
         name: string,
         attributes: Attributes,
-        fn: (span: Span) => Promise<T>
+        fn: (_span: Span) => Promise<T>
     ): Promise<T> {
         return tracer.startActiveSpan(name, { attributes }, async (span) => {
             try {

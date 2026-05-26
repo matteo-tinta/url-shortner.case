@@ -22,12 +22,17 @@ export class MutexTimeoutError extends Error {
 }
 
 class ConcurrentMutex {
-    constructor(private timeoutMs: number = -1, private maxConcurrent: number = 1) {
+    private timeoutMs: number;
+    private maxConcurrent: number;
+
+    constructor(timeoutMs: number = -1, maxConcurrent: number = 1) {
+        this.timeoutMs = timeoutMs;
+        this.maxConcurrent = maxConcurrent;
         console.log("Mutex initialized");
     }
 
     private _activeCount = 0
-    private _queue: Array<{ resolve: () => void; reject: (error: Error) => void }> = [];
+    private _queue: Array<{ resolve: () => void; reject: (_error: Error) => void }> = [];
     private _now: number = 0;
 
     private get _isLocked() {

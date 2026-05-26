@@ -1,4 +1,4 @@
-import createOptimisticConcurrentService, { OptimisticConcurrentLockService, OptimisticConcurrentLockServiceFactory } from "../../../src/core/optimistic-concurrent.service";
+import createOptimisticConcurrentService, { OptimisticConcurrentLockServiceFactory } from "../../../src/core/optimistic-concurrent.service";
 import { RedisService } from "../../../src/core/redis.service";
 
 const _createMocks = () => {

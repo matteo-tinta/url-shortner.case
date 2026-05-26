@@ -10,7 +10,7 @@ const _createMockSpan = () => ({
 });
 
 const _createMockTracer = (span: ReturnType<typeof _createMockSpan>) => ({
-    startActiveSpan: vi.fn((_name: string, _opts: any, fn: (span: any) => any) => fn(span)),
+    startActiveSpan: vi.fn((_name: string, _opts: any, fn: (_span: any) => any) => fn(span)),
 });
 
 describe("withSpan", () => {

@@ -11,7 +11,7 @@ const _factory = (options: {
     const { idempotentServiceFactory, concurrentServiceFactory } = options;
 
 
-    const withIdempotentResults = (keyFn: (req: Request) => string) => {
+    const withIdempotentResults = (keyFn: (_req: Request) => string) => {
 
         const _generateCacheKey = (req: Request) => {
             const idempotencyKey = keyFn(req);

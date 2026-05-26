@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ShortUrlCreatePayload, ShortUrlKey } from '@url-shortner/contracts';
 import { RequestWithBody, RequestWithParams } from '@url-shortner/http';
 import { ShortnerUrlService } from '../core/shortner-url.service';

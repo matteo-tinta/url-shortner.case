@@ -39,7 +39,7 @@ export const { client: redisClient, service: redisService } = installRedis({
 export const { logger, meter } = observability;
 export const idempotentResultServiceFactory = createIdempotentResultServiceFactory(redisService);
 export const optimisticConcurrentLimitServiceFactory = createOptimisticConcurrentLimitServiceFactory(redisService);
-export const withZodValidation = (schema: ZodObject, selector: (req: Request) => any) => createWithZodValidation({
+export const withZodValidation = (schema: ZodObject, selector: (_req: Request) => any) => createWithZodValidation({
     schema,
     logger: logger.logger,
     selector,

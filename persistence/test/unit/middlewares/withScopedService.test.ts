@@ -25,7 +25,7 @@ describe("withScopedService", () => {
 
         //Act & Assert
         //We trow at creation, so it will popout at startup time
-        const middleware = expect(() => withScopedService("", mockServiceFactory)).toThrow("Service name must be provided");
+        expect(() => withScopedService("", mockServiceFactory)).toThrow("Service name must be provided");
     });
 });
 

@@ -6,7 +6,7 @@ import { createWithErrorHandlingMiddleware, createWithObservability } from "@url
 import createWithConcurrentLimitingMiddleware from "./middlewares/withConcurrentLimiting";
 import createMutex from "./core/mutex.service";
 import { logger, meter, persistenceHttpClient, redisService } from "./composition";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
 import { default as withRedirectRequestParamsValidation } from "./middlewares/request-validation/withRedirectRequestParamsValidation";
 

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
 const _factory = (opt?: {
-    errorHandler: (err: any, req: Request, res: Response) => void
+    errorHandler: (_err: any, _req: Request, _res: Response) => void
 }) => {
-    const _defaultErrorHandler = (error: any, req: Request, res: Response) => {
+    const _defaultErrorHandler = (error: any, _req: Request, res: Response) => {
         console.error("An unexpected error occurred:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }

@@ -7,7 +7,7 @@ import createShortUrlRestController from "./controllers/short-url.controller";
 import createWithIdempotentResultMiddleware from './middlewares/withIdempotentResult';
 import createShortUrlServiceFactory from "./core/shortner-url.service";
 import { withScopedShortUrlServiceFactory } from "./middlewares/withScopedService";
-import { redisClient as redisClient, prisma, appConfigs, optimisticConcurrentLimitServiceFactory, idempotentResultServiceFactory, withObservability, logger, withZodValidation } from "./composition";
+import { redisClient as redisClient, prisma, appConfigs, optimisticConcurrentLimitServiceFactory, idempotentResultServiceFactory, withObservability, withZodValidation } from "./composition";
 
 import { createWithMovingWindowRateLimitingMiddleware } from '@url-shortner/http';
 import { rateLimitingServiceFactory } from "@url-shortner/services";

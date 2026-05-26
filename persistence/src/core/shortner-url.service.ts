@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "../persistence/prisma/generated/client";
+import { PrismaClient } from "../persistence/prisma/generated/client";
 import { randomBytes } from "crypto";
 
 export type ShortnerUrlServiceFactory = typeof _factory;
