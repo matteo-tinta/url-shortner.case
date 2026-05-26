@@ -1,6 +1,6 @@
 import createWithZodValidationMiddleware from "../../src/middlewares/withZodValidation";
 import { z } from "zod";
-import { expressMockFactory } from "@url-shortner/tests";
+import { expressMockFactory, createMockedLogger } from "@url-shortner/tests";
 
 it("should return 400 if validation fails", () => {
     //Arrange
@@ -9,14 +9,17 @@ it("should return 400 if validation fails", () => {
     });
 
     const { req, res, next } = expressMockFactory();
+    const logger = createMockedLogger();
 
     req.body = {
         name: 123, // Invalid type
     };
 
-    const middleware = createWithZodValidationMiddleware(
+    const middleware = createWithZodValidationMiddleware({
         schema,
-        req => req.body);
+        logger: logger as any,
+        selector: req => req.body,
+    });
 
     //Act
     middleware(req, res, next);
@@ -39,14 +42,17 @@ it("should call next if validation passes", () => {
     });
 
     const { req, res, next } = expressMockFactory();
+    const logger = createMockedLogger();
 
     req.body = {
         name: "John",
     };
 
-    const middleware = createWithZodValidationMiddleware(
+    const middleware = createWithZodValidationMiddleware({
         schema,
-        req => req.body);
+        logger: logger as any,
+        selector: req => req.body,
+    });
 
     //Act
     middleware(req, res, next);

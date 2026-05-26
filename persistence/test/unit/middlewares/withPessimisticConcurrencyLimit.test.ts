@@ -52,7 +52,7 @@ it("should throw error if idempotency key is missing", async () => {
     });
 
     //Act
-    expect(async () => await middleware.withConcurrencyLimit()(req as any, res, next))
+    await expect(async () => await middleware.withConcurrencyLimit()(req as any, res, next))
         .rejects
         .toThrow();
 

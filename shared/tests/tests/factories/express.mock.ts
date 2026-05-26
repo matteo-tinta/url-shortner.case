@@ -12,6 +12,9 @@ export const _factory = (opts?: {
     const req = {
         body: {},
         ip: "127.0.0.1",
+        headers: {},
+        method: "GET",
+        path: "/",
         ...optReq,
     };
 
@@ -24,6 +27,11 @@ export const _factory = (opts?: {
         onceCalledWith: [],
         setHeader: vi.fn(),
         once: vi.fn((event: string, callback: () => void) => {
+            if (event === "finish") {
+                callback();
+            }
+        }),
+        on: vi.fn((event: string, callback: () => void) => {
             if (event === "finish") {
                 callback();
             }
