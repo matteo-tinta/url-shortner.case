@@ -1,4 +1,5 @@
-import { default as configServiceFactory } from "../../../src/core/config.service";
+import { configure } from "@url-shortner/config";
+import { configSchema } from "../../../src/config";
 
 const mockEnv: NodeJS.ProcessEnv = {
     PERSISTENCE_API_BASE_URL: "http://localhost:3000",
@@ -11,7 +12,7 @@ const _createService = (overrides: Partial<NodeJS.ProcessEnv> = {}) => {
         ...overrides
     };
 
-    return configServiceFactory(mockEnvWithOverrides);
+    return configure(mockEnvWithOverrides, configSchema);
 }
 
 it.each([

@@ -1,7 +1,7 @@
 {
-    "name": "@url-shortner/services",
+    "name": "@url-shortner/config",
     "version": "1.0.0",
-    "description": "Shared services between persistence and redirect modules",
+    "description": "Shared config service between persistence and redirect modules",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
@@ -14,8 +14,7 @@
     "license": "ISC",
     "type": "commonjs",
     "dependencies": {
-        "@url-shortner/redis": "file:../redis",
-        "redis": "^5.12.1"
+        "zod": "^4.4.3"
     },
     "devDependencies": {
         "typescript": "^6.0.3",

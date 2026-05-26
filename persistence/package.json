@@ -20,6 +20,7 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@url-shortner/config": "file:../shared/config",
     "@url-shortner/contracts": "file:../shared/contracts",
     "@url-shortner/http": "file:../shared/http",
     "@url-shortner/observability": "file:../shared/observability",

@@ -1,10 +1,11 @@
-import createConfigService from "./core/config.service";
+import { configure } from "@url-shortner/config";
+import { configSchema } from "./config";
 import { createFetch, createPersistenceHttpClient, } from "@url-shortner/http";
 import { installObservability } from "@url-shortner/observability";
 import { installRedis } from "@url-shortner/redis";
 
 //Configuration
-export const appConfigs = createConfigService(process.env).getConfig();
+export const appConfigs = configure(process.env, configSchema).getConfig();
 
 //Observability
 const observability = installObservability({

@@ -1,7 +1,6 @@
 import z from "zod";
-import { configServiceFactory } from "@url-shortner/services";
 
-const configSchema = z.object({
+export const configSchema = z.object({
     PERSISTENCE_API_BASE_URL: z.url(),
     REDIS_URL: z.url(),
     PORT: z.string().regex(/^\d+$/).transform(Number).default(4000),
@@ -10,17 +9,3 @@ const configSchema = z.object({
 });
 
 export type Config = z.infer<typeof configSchema>;
-export type ConfigServiceFactory = typeof _factory;
-
-const _factory = (env: NodeJS.ProcessEnv) => {
-    const _centralizedConfig = configServiceFactory({
-        env,
-        schema: configSchema
-    });
-
-    return {
-        ..._centralizedConfig
-    }
-}
-
-export default _factory;

@@ -16,6 +16,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@url-shortner/config": "file:../shared/config",
     "@url-shortner/contracts": "file:../shared/contracts",
     "@url-shortner/services": "file:../shared/services",
     "@url-shortner/http": "file:../shared/http",

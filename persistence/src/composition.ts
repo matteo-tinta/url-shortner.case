@@ -1,6 +1,7 @@
 import { PrismaClient } from "./persistence/prisma/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import createConfigService from "./core/config.service";
+import { configure } from "@url-shortner/config";
+import { configSchema } from "./config";
 import createIdempotentResultServiceFactory from "./core/idempotent.service";
 import createOptimisticConcurrentLimitServiceFactory from "./core/optimistic-concurrent.service";
 import { installObservability } from "@url-shortner/observability";
@@ -11,7 +12,7 @@ import { Request } from "express";
 import { installRedis } from "@url-shortner/redis";
 
 //Configuration
-export const appConfigs = createConfigService(process.env).getConfig();
+export const appConfigs = configure(process.env, configSchema).getConfig();
 
 // Prisma Client initialization with PostgreSQL adapter
 const adapter = new PrismaPg({
