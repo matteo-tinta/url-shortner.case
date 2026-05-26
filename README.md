@@ -25,10 +25,10 @@ Case study exploring microservices patterns:
 - [ ] Rollbacks
 
 ### Redirect Service
-![Status:Planned](https://img.shields.io/badge/status-planned-darkgray)
+![Status:Development](https://img.shields.io/badge/status-planned-darkgray)
 - [ ] Circuit breaker
 - [ ] Write Through
-- [ ] Rate Limiting
+- [x] Rate Limiting
 
 ## Future implementations
 > These implementations will be considered when the above will work.
