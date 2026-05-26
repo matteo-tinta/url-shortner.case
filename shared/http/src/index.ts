@@ -12,6 +12,7 @@ export { HttpError } from "./errors/http.errors";
 export { default as createWithErrorHandlingMiddleware } from "./middlewares/withErrorHandling";
 export { default as withZodValidation } from "./middlewares/withZodValidation";
 export { default as createWithMovingWindowRateLimitingMiddleware } from "./middlewares/withMovingWindowRateLimiting";
+export { default as createWithObservability } from "./middlewares/withObservability";
 
 //Types
 export type * from "./models/api.models";

@@ -1,4 +1,5 @@
 import { SetOptions, createClient } from "redis";
+import { Logger } from "../types/logger";
 
 type RedisClient = ReturnType<typeof createClient>;
 
@@ -18,12 +19,17 @@ export interface RedisService {
     multi: () => ReturnType<RedisClient["multi"]>;
 }
 
-const _factory = (client: RedisClient): RedisService => {
+const _factory = (options: {
+    client: RedisClient,
+    logger: Logger
+}): RedisService => {
+    const { client, logger } = options;
+
     const _tryOrFail = async <T>(fn: () => Promise<T>) => {
         try {
             return await fn();
         } catch (err) {
-            console.error("Redis operation failed:", err);
+            logger.error("Redis operation failed:", err);
             throw new Error("Internal Server Error");
         }
     }

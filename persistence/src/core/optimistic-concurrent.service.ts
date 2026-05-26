@@ -1,4 +1,4 @@
-import { RedisService } from "@url-shortner/services";
+import { RedisService } from "@url-shortner/redis";
 
 export type OptimisticConcurrentLockServiceFactory = ReturnType<typeof _factory>;
 export type OptimisticConcurrentLockService = ReturnType<ReturnType<typeof _factory>>;

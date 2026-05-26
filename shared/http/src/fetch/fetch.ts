@@ -1,19 +1,29 @@
-const _fetchFactory = (factoryOptions: {
+import { WithSpan } from "@url-shortner/observability";
+
+const _fetchFactory = (options: {
     fetch: typeof globalThis.fetch,
-    baseUrl: string
-}) => async (url: RequestInfo | URL, options?: RequestInit) => {
-    const { baseUrl, fetch } = factoryOptions;
+    baseUrl: string,
+    withSpan: WithSpan
+}) => {
+    const { withSpan, ...fetchOptions } = options;
 
-    console.debug(`[FETCH] - '${baseUrl}${url}'`);
+    const handleFetch = async (url: RequestInfo | URL, options?: RequestInit) => {
+        const { baseUrl, fetch } = fetchOptions;
+        const completeUrl = `${baseUrl}${url}`;
 
-    return await fetch(`${baseUrl}${url}`, {
-        ...options,
-    });
-};
+        return await withSpan("fetch", {
+            "http.url": completeUrl,
+            "http.method": options?.method,
+        }, async () => {
 
-// const fetchFn = _fetchFactory({
-//     fetch: globalThis.fetch,
-//     baseUrl: appConfigs.PERSISTENCE_API_BASE_URL
-// });
+            return await fetch(completeUrl, {
+                ...options,
+            });
+        });
+
+    }
+
+    return handleFetch;
+}
 
 export default _fetchFactory;

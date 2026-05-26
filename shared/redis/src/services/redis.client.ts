@@ -1,10 +1,12 @@
 import { createClient } from "redis";
+import { Logger } from "../types/logger";
 
 export type RedisClient = ReturnType<typeof _factory>;
 
 const _factory = (
     options: {
-        url: string
+        url: string,
+        logger: Logger
     }
 ) => {
     const redisClient = createClient({

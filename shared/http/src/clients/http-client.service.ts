@@ -30,11 +30,19 @@ const _factory = (options: {
 
     const get = async (
         url: string,
-        params?: Omit<RequestInit, "method">,
+        params?: Omit<RequestInit, "method"> & {
+            requestId?: string,
+        },
     ) => {
+        const { requestId, ...httpParams } = params || {};
+
         const response = await options.fetch(url, {
             method: "GET",
-            ...params
+            ...httpParams,
+            headers: {
+                ...httpParams.headers,
+                "X-Request-Id": requestId || "",
+            },
         });
 
         return await _handleResponse(url, response);

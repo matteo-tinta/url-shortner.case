@@ -19,6 +19,8 @@
     "@url-shortner/contracts": "file:../shared/contracts",
     "@url-shortner/services": "file:../shared/services",
     "@url-shortner/http": "file:../shared/http",
+    "@url-shortner/observability": "file:../shared/observability",
+    "@url-shortner/redis": "file:../shared/redis",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

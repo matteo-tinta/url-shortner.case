@@ -14,6 +14,7 @@
     "license": "ISC",
     "type": "commonjs",
     "dependencies": {
+        "@url-shortner/redis": "file:../redis",
         "zod": "^4.4.3",
         "redis": "^5.12.1"
     },

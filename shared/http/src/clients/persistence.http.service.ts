@@ -11,7 +11,9 @@ const _factory = (options: {
     const getOriginalUrlFromShortLink = async (req: ShortUrlKey) => {
         const url = ShortUrlKeyZodObject.parse(req);
 
-        const response = await client.get(`/short-url/${url.key}`);
+        const response = await client.get(`/short-url/${url.key}`, {
+            requestId: req["x-request-id"],
+        });
 
         return await client.validateResponseAsJsonAndReturn(response, ShortUrlResponseZodObject);
     }

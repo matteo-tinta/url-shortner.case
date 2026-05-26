@@ -1,4 +1,4 @@
-import { RedisService } from "./redis.service";
+import { RedisService } from "@url-shortner/redis";
 
 export type RateLimitingServiceFactory = ReturnType<typeof _factory>;
 export type RateLimitingService = ReturnType<RateLimitingServiceFactory>;

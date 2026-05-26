@@ -43,7 +43,6 @@ class ConcurrentMutex {
         }
 
         this._activeCount++;
-        console.log(`MUTEX: >> Acquired lock (${this._activeCount} active)`);
         this._now = Date.now();
         return Promise.resolve();
     }
@@ -56,8 +55,10 @@ class ConcurrentMutex {
         const next = this._queue.shift()
         if (next) {
             this._now = Date.now();
-
             next.resolve()
+        }
+        else if (this._activeCount > 0) {
+            console.log(`MUTEX: >> Released lock (${this._activeCount} active)`);
             this._activeCount--
         }
 
