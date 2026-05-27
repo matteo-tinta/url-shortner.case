@@ -1,5 +1,5 @@
 ---
-status: Peding
+status: Accepted
 date: 2026-05-18
 ---
 
@@ -37,6 +37,27 @@ The operation of writing is cosidered done if - and only if - both writing opera
 
 We also decided to use Redis so that cache can work well in scalable services since redis offers is a distributed caching system. Memory cache wont work, because multiple services means that the cache is unique in each of those services and thus inconsistent during calls
 
+Full workflow:
+
+**Happy Path**
+
+1. Call persistence to store the url
+2. Persistence stores in the db and call redirect to write cache
+3. Done
+
+**Fail (on Redirect)**
+1. Call persistence to store the url
+2. Persistence stores in the db and call redirect to write cache
+3. Redirect fails -> persistenc delete the record
+4. Done (nothing changed)
+
+**Fail (on DB)**
+1. Call persistence to store the url
+2. Persistence stores in the db and fails
+3. Done (no need to rollback cache)
+
+> This ensure secure cache layer into redirect service since we are not exposing data we didn't store
+
 ### Consequences
 > What are the consequences of this approach? Must include both good and bad decisions
 
@@ -48,3 +69,4 @@ We also decided to use Redis so that cache can work well in scalable services si
 **Bad**
 - *Slower writings*: Since we are synchronzating two or more services, this will be slower.
 - *Error more frequent*: Since we waiting for multiple services ok status, this may leading us into more frequent error (service unavailable, stuck, broken, ...)
+- *Not full atomicity garantee*: Since we are not activelly using outbox pattern, but just saga intent, the rollback is not garantee to work 100% time. This is expected, and cache miss are accepted.

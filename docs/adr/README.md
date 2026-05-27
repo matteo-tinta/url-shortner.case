@@ -13,7 +13,7 @@
 
 | Status | ADR |
 |---|---|
-| ![Pending](https://img.shields.io/badge/pending-yellow) | [ADR005 - Shorten URL Caching](caching/AD005_shorten_url_caching.md) |
+| ![Approved](https://img.shields.io/badge/approved-green) | [ADR005 - Shorten URL Caching](caching/AD005_shorten_url_caching.md) |
 
 ## Concurrent Limiting
 > This section covers all the ADs that involve concurrent locking.
