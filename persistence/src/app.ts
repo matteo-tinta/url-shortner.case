@@ -7,7 +7,7 @@ import createShortUrlRestController from "./controllers/short-url.controller";
 import createWithIdempotentResultMiddleware from './middlewares/withIdempotentResult';
 import createShortUrlServiceFactory from "./core/shortner-url.service";
 import { withScopedShortUrlServiceFactory } from "./middlewares/withScopedService";
-import { redisClient as redisClient, prisma, appConfigs, optimisticConcurrentLimitServiceFactory, idempotentResultServiceFactory, withObservability, withZodValidation } from "./composition";
+import { redisClient as redisClient, prisma, appConfigs, optimisticConcurrentLimitServiceFactory, idempotentResultServiceFactory, withObservability, withZodValidation, redirectHttpClient } from "./composition";
 
 import { createWithMovingWindowRateLimitingMiddleware } from '@url-shortner/http';
 import { rateLimitingServiceFactory } from "@url-shortner/services";
@@ -27,7 +27,7 @@ const { withIdempotentResults } = createWithIdempotentResultMiddleware({
 
 const { withErrorHandling } = createWithErrorHandlingMiddleware();
 
-const withScopedShortUrlService = withScopedShortUrlServiceFactory(() => createShortUrlServiceFactory(prisma));
+const withScopedShortUrlService = withScopedShortUrlServiceFactory(createShortUrlServiceFactory);
 
 const app = express();
 
@@ -44,7 +44,7 @@ app.get("/health", (req, res) => createHealthRestController().healthCheck(req, r
 
 app.get("/short-url/:key",
     withZodValidation(ShortUrlKeyZodObject, req => ({ ...req.params, ...req.headers })),
-    withScopedShortUrlService(prisma),
+    withScopedShortUrlService(prisma, redirectHttpClient),
     async (req: RequestWithParams<ShortUrlKey>, res) =>
         await createShortUrlRestController(req.container!.shortUrlService!).getShortUrl(req, res)
 )
@@ -53,7 +53,7 @@ app.post("/short-url",
     withZodValidation(ShortUrlCreatePayloadZodObject, req => req.body),
     withZodValidation(IdempotentRequestHeadersZodObject, req => req.headers),
     withIdempotentResults((req: RequestWithBody<ShortUrlCreatePayload>) => `${req.headers['idempotency-key']}::${req.body.originalUrl}`),
-    withScopedShortUrlService(prisma),
+    withScopedShortUrlService(prisma, redirectHttpClient),
     async (req, res) => await createShortUrlRestController(req.container!.shortUrlService!).createShortUrl(req, res)
 )
 

@@ -4,6 +4,7 @@ export { default as createFetch } from "./fetch/fetch";
 //Http Clients
 // export { default as createHttpClient } from "./clients/http-client.service";
 export { default as createPersistenceHttpClient, PersistenceHttpClient } from "./clients/persistence.http.service";
+export { default as createRedirectHttpClient, RedirectHttpClient } from "./clients/redirect.http.service";
 
 //Errors
 export { HttpError } from "./errors/http.errors";

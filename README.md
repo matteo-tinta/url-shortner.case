@@ -27,7 +27,7 @@ Case study exploring microservices patterns:
 ### Redirect Service
 ![Status:Development](https://img.shields.io/badge/status-planned-darkgray)
 - [ ] Circuit breaker
-- [ ] Write Through
+- [x] Write Through
 - [x] Rate Limiting
 
 ## Future implementations

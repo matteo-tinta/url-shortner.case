@@ -48,8 +48,32 @@ const _factory = (options: {
         return await _handleResponse(url, response);
     }
 
+    const post = async (
+        url: string,
+        body: unknown,
+        params?: Omit<RequestInit, "method" | "body"> & {
+            requestId?: string,
+        },
+    ) => {
+        const { requestId, ...httpParams } = params || {};
+
+        const response = await options.fetch(url, {
+            method: "POST",
+            ...httpParams,
+            headers: {
+                "Content-Type": "application/json",
+                ...httpParams.headers,
+                "X-Request-Id": requestId || "",
+            },
+            body: JSON.stringify(body),
+        });
+
+        return await _handleResponse(url, response);
+    }
+
     return {
         get,
+        post,
         validateResponseAsJsonAndReturn: _validateJsonResponse
     }
 }

@@ -10,6 +10,7 @@ import { ZodObject } from "zod";
 import { withZodValidation as createWithZodValidation } from "@url-shortner/http";
 import { Request } from "express";
 import { installRedis } from "@url-shortner/redis";
+import { createFetch, createRedirectHttpClient } from "@url-shortner/http";
 
 //Configuration
 export const appConfigs = configure(process.env, configSchema).getConfig();
@@ -35,6 +36,14 @@ export const { client: redisClient, service: redisService } = installRedis({
     logger: observability.logger.logger,
 });
 
+
+const redirectFetch = createFetch({
+    fetch: globalThis.fetch,
+    baseUrl: appConfigs.REDIRECT_API_BASE_URL,
+    withSpan: observability.withSpan,
+});
+
+export const redirectHttpClient = createRedirectHttpClient({ fetch: redirectFetch });
 
 export const { logger, meter } = observability;
 export const idempotentResultServiceFactory = createIdempotentResultServiceFactory(redisService);

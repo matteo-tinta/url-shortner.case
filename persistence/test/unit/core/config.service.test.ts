@@ -4,6 +4,7 @@ import { configSchema } from "../../../src/config";
 const mockEnv: NodeJS.ProcessEnv = {
     DATABASE_URL: "http://localhost:3000",
     REDIS_URL: "redis://localhost:6379",
+    REDIRECT_API_BASE_URL: "http://localhost:4000",
 }
 
 const _createService = (overrides: Partial<NodeJS.ProcessEnv> = {}) => {
@@ -18,6 +19,7 @@ const _createService = (overrides: Partial<NodeJS.ProcessEnv> = {}) => {
 it.each([
     "DATABASE_URL",
     "REDIS_URL",
+    "REDIRECT_API_BASE_URL",
 ])('throws error when required environment variable is missing', (missingVar) => {
     //Arrange
 
@@ -41,6 +43,7 @@ it("creates config service with valid environment variables", () => {
     expect(config).toEqual({
         DATABASE_URL: "http://localhost:3000",
         REDIS_URL: "redis://localhost:6379",
+        REDIRECT_API_BASE_URL: "http://localhost:4000",
         RATE_LIMIT_WINDOW_MS: 60000,
         RATE_LIMIT_MAX_REQUESTS: 30,
         PORT: 4000
