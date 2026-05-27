@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import shortUrlServiceServiceFactory, { ShortnerUrlService, ShortnerUrlServiceFactory } from "../core/shortner-url.service";
 
-export type WithScopedServiceFactory<TFactory extends (...args: any[]) => TService, TService> = 
-    (factory: TFactory) =>
-    (...args: Parameters<TFactory>) => ReturnType<typeof withScopedService>;
+export type WithScopedServiceFactory<TFactory extends (..._args: any[]) => TService, TService> =
+    (_factory: TFactory) =>
+        (..._args: Parameters<TFactory>) => ReturnType<typeof withScopedService>;
 
 
 declare global {
@@ -16,7 +16,7 @@ declare global {
     }
 }
 
-const withScopedService = (serviceName: string, serviceFactory: (req: Request) => any) => {
+const withScopedService = (serviceName: string, serviceFactory: (_req: Request) => any) => {
     if (!serviceName) {
         throw new Error("Service name must be provided");
     }
@@ -32,9 +32,9 @@ const withScopedService = (serviceName: string, serviceFactory: (req: Request) =
     }
 }
 
-const withScopedShortUrlServiceFactory: WithScopedServiceFactory<ShortnerUrlServiceFactory, ShortnerUrlService> = 
-    (factory: ShortnerUrlServiceFactory) => 
-        (...args: Parameters<ShortnerUrlServiceFactory>) => 
+const withScopedShortUrlServiceFactory: WithScopedServiceFactory<ShortnerUrlServiceFactory, ShortnerUrlService> =
+    (factory: ShortnerUrlServiceFactory) =>
+        (...args: Parameters<ShortnerUrlServiceFactory>) =>
             withScopedService("shortUrlService", () => factory(...args));
 
 export {

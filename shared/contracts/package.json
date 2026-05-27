@@ -1,0 +1,21 @@
+{
+    "name": "@url-shortner/contracts",
+    "version": "1.0.0",
+    "description": "Shared contracts between persistence and redirect services",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "build:watch": "tsc --watch"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "dependencies": {
+        "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "typescript": "^6.0.3"
+    }
+}

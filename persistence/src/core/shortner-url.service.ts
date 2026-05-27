@@ -1,4 +1,5 @@
-import { Prisma, PrismaClient } from "../persistence/prisma/generated/client";
+import { PrismaClient } from "../persistence/prisma/generated/client";
+import { RedirectHttpClient } from "@url-shortner/http";
 import { randomBytes } from "crypto";
 
 export type ShortnerUrlServiceFactory = typeof _factory;
@@ -6,7 +7,7 @@ export type ShortnerUrlService = ReturnType<ShortnerUrlServiceFactory>;
 
 const BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-const _factory = (prismaService: PrismaClient) => {
+const _factory = (prismaService: PrismaClient, redirectHttpClient: RedirectHttpClient) => {
     const _generateKeyBase62 = (): string => {
         const buffer = randomBytes(8);
         let num = BigInt(0);
@@ -25,30 +26,24 @@ const _factory = (prismaService: PrismaClient) => {
     const generateShortUrl = async (originalUrl: string): Promise<string> => {
         const key = _generateKeyBase62();
 
-        await prismaService.shortnedUrl.create({
-            data: {
-                key: key,
-                url: originalUrl
-            }
-        })
+        // we ensure max atomicity: DB is written first, then cache. If cache fails, DB is rolled back.
+        await prismaService.shortnedUrl.create({ data: { key, url: originalUrl } });
+        try {
+            await redirectHttpClient.populateCache({ key, originalUrl });
+        } catch (err) {
+            await prismaService.shortnedUrl.delete({ where: { key } });
+            throw err;
+        }
 
         return key;
-    }
+    };
 
     const getOriginalUrl = async (key: string): Promise<string | null> => {
-        const record = await prismaService.shortnedUrl.findUnique({
-            where: {
-                key: key
-            }
-        });
-
+        const record = await prismaService.shortnedUrl.findUnique({ where: { key } });
         return record?.url ?? null;
-    }
+    };
 
-    return {
-        getOriginalUrl,
-        generateShortUrl
-    }
-}
+    return { getOriginalUrl, generateShortUrl };
+};
 
-export default _factory
+export default _factory;

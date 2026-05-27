@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { OptimisticConcurrentLockServiceFactory } from "../core/optimistic-concurrent.service";
-import { IdempotentRequest, IdempotentRequestHeadersZodObject } from "../models/headers.models";
+import { IdempotentRequest } from "@url-shortner/contracts";
 
 const _factory = (options: {
     concurrentServiceFactory: OptimisticConcurrentLockServiceFactory

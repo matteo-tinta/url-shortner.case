@@ -20,10 +20,15 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@url-shortner/config": "file:../shared/config",
+    "@url-shortner/contracts": "file:../shared/contracts",
+    "@url-shortner/http": "file:../shared/http",
+    "@url-shortner/observability": "file:../shared/observability",
+    "@url-shortner/services": "file:../shared/services",
+    "@url-shortner/redis": "file:../shared/redis",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "redis": "^5.12.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -31,6 +36,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.0",
     "@types/supertest": "^7.2.0",
+    "@url-shortner/tests": "file:../shared/tests",
     "nodemon": "^3.1.14",
     "prisma": "^7.8.0",
     "supertest": "^7.2.2",

@@ -1,0 +1,25 @@
+{
+    "name": "url-shortner",
+    "private": true,
+    "packageManager": "npm@11.9.0",
+    "workspaces": [
+        "shared/*",
+        "persistence",
+        "redirect"
+    ],
+    "scripts": {
+        "install:all": "npm install",
+        "build": "turbo run build",
+        "test": "turbo run test",
+        "dev": "turbo run dev",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^8.46.2",
+        "@typescript-eslint/parser": "^8.46.2",
+        "eslint": "^9.39.1",
+        "eslint-plugin-unused-imports": "^4.3.0",
+        "turbo": "latest"
+    }
+}

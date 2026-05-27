@@ -1,4 +1,4 @@
-import createIdempotentResultService, { IdempotentResultServiceFactory } from "../../../src/core/idempotent.service";
+import createIdempotentResultService from "../../../src/core/idempotent.service";
 import { RedisService } from "../../../src/core/redis.service";
 
 const _createMocks = () => {
