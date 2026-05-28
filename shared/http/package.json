@@ -18,6 +18,8 @@
         "@url-shortner/observability": "file:../observability",
         "@url-shortner/services": "file:../services",
         "express": "^5.2.1",
+        "jose": "^6.1.2",
+        "lru-cache": "^11.2.2",
         "zod": "^4.4.3"
     },
     "devDependencies": {

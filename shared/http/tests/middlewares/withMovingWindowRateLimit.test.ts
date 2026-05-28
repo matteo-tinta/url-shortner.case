@@ -77,7 +77,7 @@ it("should handle errors from rate limiting service", async () => {
     });
 
     //Act & Assert
-    expect(async () => await middleware.withMovingWindowRateLimiting({
+    await expect(middleware.withMovingWindowRateLimiting({
         limit: 5,
         windowMs: 60000
     })(req, res, next)).rejects.toThrow(error);

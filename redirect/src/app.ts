@@ -7,7 +7,7 @@ import { createWithErrorHandlingMiddleware, createWithObservability, withZodVali
 import { CacheWritePayload, CacheWritePayloadZodObject } from "@url-shortner/contracts";
 import createWithConcurrentLimitingMiddleware from "./middlewares/withConcurrentLimiting";
 import createMutex from "./core/mutex.service";
-import { logger, meter, persistenceHttpClient, redisService } from "./composition";
+import { logger, meter, persistenceHttpClient, redisService, withServiceAuthentication } from "./composition";
 import { Request, Response } from "express";
 
 import { default as withRedirectRequestParamsValidation } from "./middlewares/request-validation/withRedirectRequestParamsValidation";
@@ -42,7 +42,7 @@ app.use(cors(), express.json());
 
 app.post("/cache",
     withObservability(),
-    // TODO: add api authorization with header middleware
+    withServiceAuthentication,
     withZodValidation({ schema: CacheWritePayloadZodObject, logger: logger.logger, selector: (req) => req.body }),
     async (req: RequestWithBody<CacheWritePayload>, res) => {
         await cacheService.setInCache(req.body.key, req.body.originalUrl);

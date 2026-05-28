@@ -3,6 +3,7 @@ import { configSchema } from "../../../src/config";
 
 const mockEnv: NodeJS.ProcessEnv = {
     PERSISTENCE_API_BASE_URL: "http://localhost:3000",
+    ISSUER_API_BASE_URL: "http://localhost:3001",
     REDIS_URL: "redis://localhost:6379",
 }
 
@@ -17,6 +18,7 @@ const _createService = (overrides: Partial<NodeJS.ProcessEnv> = {}) => {
 
 it.each([
     "PERSISTENCE_API_BASE_URL",
+    "ISSUER_API_BASE_URL",
     "REDIS_URL",
 ])('throws error when required environment variable is missing', (missingVar) => {
     //Arrange
@@ -40,7 +42,12 @@ it("creates config service with valid environment variables", () => {
     //Assert
     expect(config).toEqual({
         PERSISTENCE_API_BASE_URL: "http://localhost:3000",
+        ISSUER_API_BASE_URL: "http://localhost:3001",
         REDIS_URL: "redis://localhost:6379",
+        SERVICE_ID: "redirect-service",
+        OUTBOUND_SERVICE_AUDIENCE: "persistence-service",
+        AUTH_ISSUER: "issuer-service",
+        AUTH_ALLOWED_CALLERS: "persistence-service",
         RATE_LIMIT_WINDOW_MS: 60000,
         RATE_LIMIT_MAX_REQUESTS: 30,
         PORT: 4000
