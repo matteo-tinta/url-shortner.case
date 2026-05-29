@@ -52,6 +52,34 @@ describe("PersistenceHttpClient", () => {
             expect(result).toEqual({ originalUrl });
         });
 
+        it("should include Authorization and X-Service-Id headers when token provider is configured", async () => {
+            //Arrange
+            const mockFetch = _createMockFetch();
+            const client = createPersistenceHttpClient({
+                fetch: mockFetch as any,
+                getServiceToken: async () => "jwt-token",
+                serviceId: "redirect-service",
+            });
+            mockFetch.mockResolvedValue(_createJsonResponse({ originalUrl: "https://example.com" }));
+
+            //Act
+            await client.getOriginalUrlFromShortLink({
+                key: "abc123456",
+                "x-request-id": "req-123",
+            });
+
+            //Assert
+            expect(mockFetch).toHaveBeenCalledWith(
+                "/short-url/abc123456",
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        Authorization: "Bearer jwt-token",
+                        "X-Service-Id": "redirect-service",
+                    }),
+                })
+            );
+        });
+
         it.each([
             { key: "short", description: "too short (< 9 chars)" },
             { key: "toolongkeyvalue", description: "too long (> 11 chars)" },

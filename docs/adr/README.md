@@ -8,6 +8,13 @@
 | ![Approved](https://img.shields.io/badge/approved-green) | [ADR001 - Service Architecture](general/AD001_Service_Architecture.md) |
 | ![Approved](https://img.shields.io/badge/approved-green) | [ADR004 - Backend Technologies](general/AD004_backend_technologies.md) |
 
+## Authentication
+> This section covers all the ADs that involve authentication.
+
+| Status | ADR |
+|---|---|
+| ![Approved](https://img.shields.io/badge/approved-green) | [ADR010 - Authentication](authentication/AD010_authentication-between-services.md) |
+
 ## Caching
 > This section covers all the ADs that involve caching.
 
