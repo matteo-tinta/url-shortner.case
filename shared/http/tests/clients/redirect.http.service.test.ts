@@ -70,5 +70,30 @@ describe("RedirectHttpClient", () => {
                 client.populateCache({ key: "abc123456", originalUrl: "https://example.com" })
             ).rejects.toThrow();
         });
+
+        it("should include Authorization and X-Service-Id headers when token provider is configured", async () => {
+            //Arrange
+            const mockFetch = _createMockFetch();
+            const client = createRedirectHttpClient({
+                fetch: mockFetch as any,
+                getServiceToken: async () => "jwt-token",
+                serviceId: "persistence-service",
+            });
+            mockFetch.mockResolvedValue(_createOkResponse());
+
+            //Act
+            await client.populateCache({ key: "abc123456", originalUrl: "https://example.com" });
+
+            //Assert
+            expect(mockFetch).toHaveBeenCalledWith(
+                "/cache",
+                expect.objectContaining({
+                    headers: expect.objectContaining({
+                        Authorization: "Bearer jwt-token",
+                        "X-Service-Id": "persistence-service",
+                    }),
+                })
+            );
+        });
     });
 });

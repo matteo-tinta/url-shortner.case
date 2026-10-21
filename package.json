@@ -5,7 +5,8 @@
     "workspaces": [
         "shared/*",
         "persistence",
-        "redirect"
+        "redirect",
+        "issuer"
     ],
     "scripts": {
         "install:all": "npm install",
